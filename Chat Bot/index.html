@@ -1,0 +1,78 @@
+<html>
+<head>
+    <title>Chat Bot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 h-screen flex items-center justify-center">
+    <div class="bg-white w-full max-w-md rounded-lg shadow-lg p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h1 class="text-2xl font-bold">Chat Bot</h1>
+            <i class="fas fa-robot text-2xl text-blue-500"></i>
+        </div>
+        <div id="chat-window" class="h-80 overflow-y-auto mb-4 p-4 border border-gray-300 rounded-lg bg-gray-50">
+            <!-- Chat messages will appear here -->
+        </div>
+        <div class="flex">
+            <input id="user-input" type="text" class="flex-grow p-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Type your message...">
+            <button id="send-button" class="bg-blue-500 text-white p-2 rounded-r-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const chatWindow = document.getElementById('chat-window');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+
+        sendButton.addEventListener('click', () => {
+            const userMessage = userInput.value.trim();
+            if (userMessage) {
+                addMessage('user', userMessage);
+                userInput.value = '';
+                setTimeout(() => {
+                    addMessage('bot', getBotResponse(userMessage));
+                }, 1000);
+            }
+        });
+
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendButton.click();
+            }
+        });
+
+        function addMessage(sender, message) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('mb-2', 'p-2', 'rounded-lg', 'max-w-xs', 'break-words');
+            if (sender === 'user') {
+                messageElement.classList.add('bg-blue-500', 'text-white', 'self-end');
+                messageElement.textContent = message;
+            } else {
+                messageElement.classList.add('bg-gray-300', 'text-black', 'self-start');
+                messageElement.textContent = message;
+            }
+            chatWindow.appendChild(messageElement);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        function getBotResponse(message) {
+            // Simple bot response logic
+            const responses = {
+                'hello': 'Hi there! How can I help you today?',
+                'how are you': 'I am just a bot, but I am doing great! How about you?',
+                'what is your name': 'I am your friendly chat bot!',
+                'bye': 'Goodbye! Have a great day!'
+            };
+            return responses[message.toLowerCase()] || 'I am sorry, I do not understand that.';
+        }
+    </script>
+</body>
+</html>
